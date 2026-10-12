@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#071b16">
+  <title>پیروزی فوتبال</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="rotateNotice" class="rotate-notice">برای تجربه بهتر، گوشی را افقی کنید ↻</div>
+  <header class="topbar">
+    <div class="brand"><div class="brand-ball">⚽</div><div><b>پیروزی فوتبال</b><small>مدیریت باشگاه تو، افتخار تو</small></div></div>
+    <div class="wallet"><span>🪙 <b id="coins">1200</b></span><span>💵 <b id="cash">25000000</b></span></div>
+    <button class="icon-btn" data-page="settings" aria-label="تنظیمات">⚙</button>
+  </header>
+
+  <main>
+    <section id="home" class="page active">
+      <div class="hero">
+        <div class="hero-copy"><span class="eyebrow">فصل جدید · شروع مسیر قهرمانی</span><h1 id="clubTitle">باشگاه پیروزی من</h1><p>ترکیبت را بساز، در لیگ بجنگ و جام را بالای سر ببر.</p>
+          <div class="hero-actions"><button class="primary" data-page="team">ترکیب تیم</button><button class="secondary" data-page="league">ادامه لیگ</button></div>
+        </div>
+        <div class="stadium-art"><div class="stadium-lights"></div><div class="stands"></div><div class="pitch"><div class="halfline"></div><div class="center-circle"></div><div class="goal g1"></div><div class="goal g2"></div></div><div class="crowd">● ● ● ● ● ● ● ● ● ● ● ● ● ● ●</div></div>
+      </div>
+      <div class="section-head"><h2>باشگاه شما</h2><span class="muted">نمای کلی</span></div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>🏆</span><small>لیگ جاری</small><b id="leagueName">لیگ ایران</b></article>
+        <article class="stat-card"><span>⭐</span><small>قدرت تیم</small><b id="teamPower">0</b></article>
+        <article class="stat-card"><span>👥</span><small>بازیکنان</small><b id="playerCount">0</b></article>
+        <article class="stat-card"><span>🏟️</span><small>سطح ورزشگاه</small><b id="stadiumLevel">1</b></article>
+      </div>
+      <div class="section-head"><h2>کارهای سریع</h2></div>
+      <div class="quick-grid">
+        <button class="quick-card" data-page="packs"><span>🎁</span><b>پک افتتاحیه</b><small>بازیکنان ایرانی</small></button>
+        <button class="quick-card" data-page="market"><span>🔁</span><b>نقل‌وانتقالات</b><small>خرید با پول بازی</small></button>
+        <button class="quick-card" data-page="missions"><span>📅</span><b>مأموریت و جایزه</b><small>پاداش روزانه و هفتگی</small></button>
+        <button class="quick-card" data-page="analysis"><span>📊</span><b>تحلیل تیم</b><small>بررسی نقاط قوت</small></button>
+      </div>
+    </section>
+
+    <section id="team" class="page">
+      <div class="section-head"><div><h2>تیم من</h2><p class="muted">بازیکن را انتخاب کن و با نیمکت جابه‌جا کن.</p></div><button class="secondary small" id="editClub">ویرایش باشگاه</button></div>
+      <div class="formation-wrap"><div class="formation-label">ترکیب اصلی · 4-3-3</div><div id="formation" class="formation"></div></div>
+      <div class="section-head"><h2>نیمکت و بازیکنان ذخیره</h2><span class="muted">روی دو بازیکن بزن تا جابه‌جا شوند</span></div>
+      <div id="bench" class="player-grid"></div>
+      <div class="hint">راهنما: اول بازیکن اصلی یا ذخیره را انتخاب کن، سپس بازیکن دوم را انتخاب کن.</div>
+    </section>
+
+    <section id="packs" class="page">
+      <div class="section-head"><div><h2>پک بازیکنان</h2><p class="muted">اسطوره‌ها فقط از پک به‌دست می‌آیند؛ پک افتتاحیه فقط بازیکنان ایرانی دارد.</p></div></div>
+      <div class="pack-grid">
+        <article class="pack-card opening"><div class="pack-glow">🇮🇷</div><span class="rarity-tag">ویژه شروع</span><h3>پک افتتاحیه ایرانی</h3><p>۳ بازیکن ایرانی تصادفی · بدون اسطوره</p><b>رایگان · یک‌بار</b><button id="openingPack" class="primary full">باز کردن پک افتتاحیه</button></article>
+        <article class="pack-card"><div class="pack-glow">🎴</div><h3>پک ۱۰تایی</h3><p>۱۰ بازیکن تصادفی از رده‌های مختلف</p><b>۹۰۰ کوین</b><button id="pack10" class="primary full">باز کردن پک ۱۰تایی</button></article>
+        <article class="pack-card"><div class="pack-glow">✨</div><h3>پک ۱۰۰تایی</h3><p>۱۰۰ بازیکن تصادفی؛ شانس بیشتر برای رده‌های بالا</p><b>۹۰۰ کوین</b><button id="pack100" class="primary full">باز کردن پک ۱۰۰تایی</button></article>
+      </div>
+      <div id="packResults" class="player-grid"></div>
+    </section>
+
+    <section id="market" class="page">
+      <div class="section-head"><div><h2>نقل‌وانتقالات</h2><p class="muted">بازیکنان با پول داخل بازی خریداری می‌شوند؛ اسطوره‌ها در بازار نیستند.</p></div><input id="marketSearch" class="search" placeholder="جست‌وجوی بازیکن یا تیم"></div>
+      <div class="filters"><button class="filter active" data-rarity="همه">همه</button><button class="filter" data-rarity="استاندارد">استاندارد</button><button class="filter" data-rarity="متوسط">متوسط</button><button class="filter" data-rarity="حماسی">حماسی</button><button class="filter" data-rarity="لجند">لجند</button></div>
+      <div id="marketPlayers" class="player-grid"></div>
+    </section>
+
+    <section id="league" class="page">
+      <div class="section-head"><div><h2>لیگ و مسابقات</h2><p class="muted">بازی‌ها شبیه‌سازی متنی هستند؛ بعد از پایان فصل می‌توانی فصل تازه شروع کنی.</p></div><select id="leagueSelect" class="select"><option>لیگ ایران</option><option>لیگ انگلیس</option><option>لالیگا</option><option>سری آ ایتالیا</option><option>بوندس‌لیگا</option><option>لیگ فرانسه</option><option>لیگ قهرمانان</option></select></div>
+      <div class="match-banner"><div><small>مسابقه بعدی</small><h3 id="nextOpponent">سپاهان</h3><p id="matchMeta">هفته ۱ · ورزشگاه خانگی</p></div><div class="versus">⚽</div><button id="playMatch" class="primary">شروع مسابقه</button></div>
+      <div id="matchArea" class="match-area hidden"></div>
+      <div class="section-head"><h2>جدول لیگ</h2><button id="newSeason" class="secondary small">شروع فصل جدید</button></div>
+      <div id="leagueTable" class="league-table"></div>
+    </section>
+
+    <section id="analysis" class="page">
+      <div class="section-head"><div><h2>تحلیل تیم</h2><p class="muted">ارزیابی بر اساس بازیکنان فعلی و سطح باشگاه.</p></div></div>
+      <div class="analysis-score"><div class="score-ring"><b id="analysisPower">0</b><small>قدرت</small></div><div><h3 id="analysisVerdict">در حال ساخت تیم</h3><p id="analysisText">بازیکنان جذب کن تا قدرت تیم بیشتر شود.</p></div></div>
+      <div id="analysisBars" class="analysis-bars"></div>
+      <div class="section-head"><h2>ارتقای باشگاه</h2></div>
+      <div class="upgrade-grid">
+        <article class="upgrade-card"><span>🏟️</span><h3>ارتقای ورزشگاه</h3><p>درآمد خانگی و امتیاز میزبانی را افزایش بده.</p><b id="stadiumCost">هزینه: 5,000,000</b><button id="upgradeStadium" class="primary full">ارتقا</button></article>
+        <article class="upgrade-card"><span>💪</span><h3>تمرین بازیکن</h3><p>یکی از بازیکنان را برای افزایش قدرت انتخاب کن.</p><select id="upgradePlayer" class="select full"></select><b id="playerUpgradeCost">هزینه: 1,000,000</b><button id="upgradePlayerBtn" class="primary full">تمرین و ارتقا</button></article>
+      </div>
+    </section>
+
+    <section id="missions" class="page">
+      <div class="section-head"><div><h2>مأموریت‌ها و جایزه‌ها</h2><p class="muted">پاداش‌ها روی همین دستگاه ذخیره می‌شوند.</p></div></div>
+      <div class="daily-card"><div><span class="eyebrow">جایزه روزانه</span><h3>پاداش ورود روزانه</h3><p>هر روز یک بار جایزه بگیر.</p></div><button id="dailyReward" class="primary">دریافت ۱۰۰ کوین</button></div>
+      <div class="section-head"><h2>مأموریت هفتگی</h2><span id="weeklyReset" class="muted">پیشرفت این هفته</span></div>
+      <div id="missionsList" class="mission-list"></div>
+    </section>
+
+    <section id="store" class="page">
+      <div class="section-head"><div><h2>فروشگاه کوین</h2><p class="muted">فعلاً حالت نمایشی؛ اتصال واقعی پرداخت باید سمت سرور انجام شود.</p></div></div>
+      <div class="store-card"><div class="coin-large">🪙</div><h3>بسته ۱۰۰۰ کوین</h3><p>این دکمه فعلاً خرید واقعی انجام نمی‌دهد. بعداً شناسه سفارش و تأیید پرداخت Remit را به سرور وصل کن.</p><button id="remitButton" class="primary full">رفتن به صفحه حمایت / Remit</button><a href="https://reymit.ir/xgame17" target="_blank" rel="noopener">لینک حمایت از بازی: reymit.ir/xgame17</a></div>
+      <div class="hint">برای فروش کوین در نسخه واقعی، پرداخت را فقط بعد از تأیید سرور و وب‌هوک معتبر ثبت کن؛ اعتبار پرداخت را از مرورگر کاربر قبول نکن.</div>
+    </section>
+
+    <section id="settings" class="page">
+      <div class="section-head"><div><h2>تنظیمات</h2><p class="muted">اطلاعات بازی به‌صورت محلی در همین مرورگر ذخیره می‌شود.</p></div></div>
+      <div class="settings-card"><label>نام باشگاه<input id="clubNameInput" maxlength="28" placeholder="نام باشگاه"></label><label>لوگوی باشگاه از گالری<input id="logoInput" type="file" accept="image/*"></label><div class="logo-preview"><img id="clubLogo" alt="لوگوی باشگاه" class="hidden"><span id="logoPlaceholder">⚽</span></div><button id="saveClub" class="primary">ذخیره تغییرات باشگاه</button></div>
+      <div class="settings-card"><h3>ارتباط با سازنده</h3><a href="https://rubika.ir/footballpiroozy" target="_blank" rel="noopener">کانال روبیکا: @footballpiroozy</a><a href="https://reymit.ir/xgame17" target="_blank" rel="noopener">حمایت از بازی: reymit.ir/xgame17</a></div>
+      <div class="settings-card"><h3>مدیریت داده‌ها</h3><p class="muted">پاک‌کردن داده‌ها تمام پیشرفت‌های ذخیره‌شده را حذف می‌کند.</p><button id="resetGame" class="danger">شروع از صفر / پاک کردن ذخیره</button></div>
+      <div class="hint">نسخه نمایشی آفلاین · فهرست ۱۵٬۰۰۰ نفری با داده نمونه تولید می‌شود؛ برای اطلاعات رسمی، تصاویر دارای مجوز و دیتابیس واقعی لازم است.</div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="home"><span>⌂</span>خانه</button><button class="nav-item" data-page="team"><span>👥</span>تیم من</button><button class="nav-item" data-page="packs"><span>🎴</span>پک‌ها</button><button class="nav-item" data-page="league"><span>🏆</span>لیگ</button><button class="nav-item" data-page="store"><span>🪙</span>کوین</button>
+  </nav>
+  <div id="toast" class="toast"></div>
+  <script src="script.js"></script>
+</body>
+</html>
