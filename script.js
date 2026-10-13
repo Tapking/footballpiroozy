@@ -74,8 +74,9 @@ function renderHome(){
 }
 function renderTeam(){
  const formation=$('#formation');formation.innerHTML='';
- // Render 11 starting players in a 4-3-3-ish pitch layout
- state.starters.forEach((id,i)=>{const p=getPlayer(id);if(!p)return;const c=card(p,'starter');c.style.gridColumn = [5,6,7,8].includes(i)?String((i%4)+1):'';formation.appendChild(c);});
+ // Football pitch in a classic 4-3-3: forwards, midfielders, defenders, goalkeeper.
+ const order=[9,10,11,6,7,8,2,3,4,5,0];
+ state.starters.forEach((id,i)=>{const p=getPlayer(id);if(!p)return;const c=card(p,'starter');c.classList.add('pitch-player');c.style.gridColumn=String((i%4)+1);c.style.gridRow=String(i<3?1:i<6?2:i<10?3:4);if(i===0)c.style.gridColumn='2';if(i===1)c.style.gridColumn='3';if(i===2)c.style.gridColumn='4';if(i===3)c.style.gridColumn='1';if(i===4)c.style.gridColumn='2';if(i===5)c.style.gridColumn='4';if(i===6)c.style.gridColumn='1';if(i===7)c.style.gridColumn='2';if(i===8)c.style.gridColumn='3';if(i===9)c.style.gridColumn='4';if(i===10){c.style.gridColumn='2 / span 2';c.style.gridRow='4';}formation.appendChild(c);});
  const bench=$('#bench');bench.innerHTML='';state.bench.forEach(id=>{const p=getPlayer(id);if(p)bench.appendChild(card(p,'bench'));});
 }
 function selectForSwap(id){
@@ -141,13 +142,15 @@ function playMatch(){
  for(let i=0;i<5;i++){if(Math.random()*100<strength*.48)myGoals++;if(Math.random()*100<oppPower*.44)oppGoals++;}
  state.played++;state.missionProgress.matches++;state.week++;
  let resultText='';
- if(myGoals>oppGoals){state.wins++;state.cash+=1800000;resultText='برد';}
- else if(myGoals<oppGoals){state.losses++;state.cash+=700000;resultText='باخت';}
- else{state.draws++;state.cash+=1100000;resultText='مساوی';}
+ state.coins+=1; // Every completed match grants exactly 1 coin.
+ let cashReward=10000, coinReward=1;
+ if(myGoals>oppGoals){state.wins++;state.cash+=100000;state.coins+=100;coinReward+=100;cashReward=100000;resultText='برد';}
+ else if(myGoals<oppGoals){state.losses++;state.cash+=10000;cashReward=10000;resultText='باخت';}
+ else{state.draws++;state.cash+=25000;cashReward=25000;resultText='مساوی';}
  const myKey=state.league+'|__ME__';const my=state.table[myKey]||{pts:0,p:0,w:0,d:0,l:0};my.p++;my.w+=myGoals>oppGoals?1:0;my.l+=myGoals<oppGoals?1:0;my.d+=myGoals===oppGoals?1:0;my.pts+=myGoals>oppGoals?3:myGoals===oppGoals?1:0;state.table[myKey]=my;
  const opKey=state.league+'|'+opp;const op=state.table[opKey]||{pts:0,p:0,w:0,d:0,l:0};op.p++;op.w+=oppGoals>myGoals?1:0;op.l+=oppGoals<myGoals?1:0;op.d+=oppGoals===myGoals?1:0;op.pts+=oppGoals>myGoals?3:oppGoals===myGoals?1:0;state.table[opKey]=op;
  state.lastResult={myGoals,oppGoals,opp,resultText};save();renderAll();
- const area=$('#matchArea');area.classList.remove('hidden');area.innerHTML=`<div class="match-score">${myGoals} - ${oppGoals}</div><h3 style="text-align:center">${escapeHtml(state.clubName)} × ${escapeHtml(opp)}</h3><p style="text-align:center;color:var(--lime)">${resultText} · جایزه ${fmt(myGoals>oppGoals?1800000:myGoals===oppGoals?1100000:700000)} پول بازی</p><div class="match-log">گزارش مسابقه: بازی به‌صورت شبیه‌سازی خودکار اجرا شد. قدرت تیم شما ${Math.round(strength)} و قدرت حریف ${oppPower} بود.</div><button class="secondary full" id="closeMatch">پایان بازی</button>`;
+ const area=$('#matchArea');area.classList.remove('hidden');area.innerHTML=`<div class="match-score">${myGoals} - ${oppGoals}</div><h3 style="text-align:center">${escapeHtml(state.clubName)} × ${escapeHtml(opp)}</h3><p style="text-align:center;color:var(--lime)">${resultText} · ${fmt(cashReward)} پول بازی + ${fmt(coinReward)} کوین</p><div class="match-log">گزارش مسابقه: بازی به‌صورت شبیه‌سازی خودکار اجرا شد. قدرت تیم شما ${Math.round(strength)} و قدرت حریف ${oppPower} بود.</div><button class="secondary full" id="closeMatch">پایان بازی</button>`;
  $('#closeMatch').addEventListener('click',()=>{$('#matchArea').classList.add('hidden');toast('مسابقه ثبت و ذخیره شد.');});
  if(state.week>16)toast('فصل تمام شد! می‌توانی فصل جدید را شروع کنی.');
 }
