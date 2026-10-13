@@ -57,12 +57,14 @@ function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('sh
 function getPlayer(id){return state.pool.find(p=>p.id===id);}
 function ownedPlayers(){return [...state.starters,...state.bench].map(getPlayer).filter(Boolean);}
 function power(){const arr=state.starters.map(getPlayer).filter(Boolean);return arr.length?Math.round(arr.reduce((a,p)=>a+p.rating,0)/arr.length):0;}
-function playerPrice(p){let base=p.rating*p.rating*1400;if(p.rarity==='لجند')base*=3.2;if(p.rarity==='حماسی')base*=1.8;if(p.rarity==='متوسط')base*=1.2;return Math.round(base/100000)*100000;}
+function playerPrice(p){let base=p.rating*p.rating*1400;if(p.rarity==='لجند')base*=3.2;if(p.rarity==='حماسی')base*=1.8;if(p.rarity==='متوسط')base*=1.2;return Math.max(100000,Math.round(base/100000)*100000);}
+function playerSellPrice(p){let multiplier=p.rarity==='اسطوره'?2.5:p.rarity==='لجند'?3.2:p.rarity==='حماسی'?1.8:p.rarity==='متوسط'?1.2:1;return Math.max(50000,Math.floor((p.rating*p.rating*1400*multiplier*0.6)/50000)*50000);}
 function card(p,zone='market'){
  const el=document.createElement('div');el.className=`player-card rarity-${p.rarity}${selectedPlayer===p.id?' selected':''}`;
  el.innerHTML=`<span class="rating">${p.rating}</span><span class="position">${p.pos}</span><div class="player-photo">${emojiByPos[p.pos]||'⚽'}</div><strong title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</strong><div class="club">${escapeHtml(p.club)}</div><span class="rarity">${p.rarity}</span>`;
  if(zone==='bench'||zone==='starter'){el.classList.add('bench-card');el.addEventListener('click',()=>selectForSwap(p.id));}
  if(zone==='market'){const price=playerPrice(p);const b=document.createElement('button');b.className='primary full';b.textContent='خرید '+fmt(price);b.addEventListener('click',()=>buyPlayer(p.id));el.appendChild(b);}
+ if(zone==='sell'){const isStarter=state.starters.includes(p.id);const price=playerSellPrice(p);const b=document.createElement('button');b.className=(isStarter?'secondary':'danger')+' full';b.textContent=isStarter?'تعویض با ذخیره برای فروش':('فروش · '+fmt(price));b.disabled=isStarter;b.title=isStarter?'برای جلوگیری از ناقص شدن ترکیب، ابتدا با ذخیره تعویض کن.':'';if(!isStarter)b.addEventListener('click',()=>sellPlayer(p.id));el.appendChild(b);const meta=document.createElement('small');meta.className='sell-status';meta.textContent=isStarter?'ترکیب اصلی':'قیمت فروش';el.appendChild(meta);}
  if(zone==='result'){el.style.cursor='default';}
  return el;
 }
@@ -103,6 +105,19 @@ function buyPlayer(id){
  state.cash-=price;p.owned=true;
  if(state.starters.length<11)state.starters.push(id);else state.bench.push(id);
  state.missionProgress.signings++;save();renderAll();toast(p.name+' به باشگاه اضافه شد.');
+}
+function renderSell(){
+ const area=$('#sellPlayers');if(!area)return;area.innerHTML='';
+ const players=ownedPlayers().slice().sort((a,b)=>Number(state.starters.includes(a.id))-Number(state.starters.includes(b.id)) || b.rating-a.rating);
+ players.forEach(p=>area.appendChild(card(p,'sell')));
+ if(!players.length)area.innerHTML='<p class="muted">بازیکنی برای فروش نداری.</p>';
+}
+function sellPlayer(id){
+ const p=getPlayer(id);if(!p||(!state.starters.includes(id)&&!state.bench.includes(id)))return;
+ if(state.starters.includes(id)){toast('برای حفظ ترکیب، ابتدا این بازیکن را با یک ذخیره تعویض کن.');return;}
+ const price=playerSellPrice(p);
+ if(!confirm('بازیکن «'+p.name+'» با قیمت '+fmt(price)+' پول فروخته شود؟ این کار قابل بازگشت نیست.'))return;
+ state.bench=state.bench.filter(pid=>pid!==id);p.owned=false;state.cash+=price;save();renderAll();renderSell();toast(p.name+' فروخته شد؛ '+fmt(price)+' پول دریافت کردی.');
 }
 function weightedRarity(opening=false){
  if(opening)return Math.random()<.12?'حماسی':Math.random()<.35?'متوسط':'استاندارد';
@@ -172,8 +187,8 @@ function renderMissions(){
  $('#missionsList').innerHTML=missions.map(m=>{const prog=Math.min(state.missionProgress[m.id]||0,m.goal),claimed=state.weeklyClaims.includes(m.id);return `<div class="mission"><div class="mission-top"><b>${m.title}</b><b>🪙 ${m.reward}</b></div><p>${m.desc} · ${prog}/${m.goal}</p><div class="mission-progress"><i style="width:${prog/m.goal*100}%"></i></div><button data-mission="${m.id}" ${claimed||prog<m.goal?'disabled':''}>${claimed?'دریافت شد':prog<m.goal?'در حال انجام':'دریافت جایزه'}</button></div>`;}).join('');
  $$('[data-mission]').forEach(b=>b.addEventListener('click',()=>{const m=missions.find(x=>x.id===b.dataset.mission);if(!m||state.weeklyClaims.includes(m.id)||(state.missionProgress[m.id]||0)<m.goal)return;state.weeklyClaims.push(m.id);state.coins+=m.reward;save();renderAll();toast('جایزه مأموریت دریافت شد.');}));
 }
-function renderAll(){renderHome();renderTeam();renderMarket();renderLeague();renderAnalysis();renderMissions();}
-function showPage(name){$$('.page').forEach(p=>p.classList.toggle('active',p.id===name));$$('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));if(name==='market')renderMarket();if(name==='team')renderTeam();window.scrollTo({top:0,behavior:'smooth'});}
+function renderAll(){renderHome();renderTeam();renderMarket();renderSell();renderLeague();renderAnalysis();renderMissions();}
+function showPage(name){$$('.page').forEach(p=>p.classList.toggle('active',p.id===name));$$('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name));if(name==='market')renderMarket();if(name==='team')renderTeam();if(name==='sell')renderSell();window.scrollTo({top:0,behavior:'smooth'});}
 $$('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 $('#openingPack').addEventListener('click',()=>openPack(3,true));$('#pack10').addEventListener('click',()=>openPack(10,false));$('#pack100').addEventListener('click',()=>openPack(100,false));
 $('#marketSearch').addEventListener('input',renderMarket);
